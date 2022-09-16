@@ -1,3 +1,5 @@
+"use strict"
+
 class Controller {
     constructor() {
         this.model = new Friends()

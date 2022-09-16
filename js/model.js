@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     Modelo de datos
 
@@ -48,8 +50,9 @@ class Friends {
         for (let i = 0; i < this.friends.length; i++) {
             if (name === this.friends[i].name) {
 
-                this.friends[i].history.add(this.friends[i].date, this.friends[i].note, true)
-                this.friends[i].date = addDays(this.friends[i].date, this.friends[i].periodicity)
+                this.friends[i].history.add(date, note, true)
+                this.friends[i].date = addDays(date, this.friends[i].periodicity).toISOString().substring(0, 10)
+                this.friends[i].note = ""
 
                 this.saveAll()
                 this.wereChangesEvent.trigger(this.getAll())
@@ -61,7 +64,21 @@ class Friends {
 //-------------------------------------------------------------------------------------
 
     loadAll() {
-        return JSON.parse(localStorage.getItem("friends")) || []
+        // return JSON.parse(localStorage.getItem("friends")) || []
+        const friendsAttributes = JSON.parse(localStorage.getItem("friends")) || []
+        const friendsArr = []
+        for (const friendData of friendsAttributes) {
+            const {name, date, importance, periodicity, note, history} = friendData
+            const friend = new Friend(name, date, importance, periodicity, note)
+
+            for (const histNoteData of history.history) {
+                const {date, note, state} = histNoteData
+                friend.history.add(date, note, state)
+            }
+
+            friendsArr.push(friend)
+        }
+        return friendsArr
     }
 
     saveAll() {

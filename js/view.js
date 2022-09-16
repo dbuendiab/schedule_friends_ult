@@ -1,3 +1,5 @@
+"use strict"
+
 class View {
     constructor(parent) {
         this.root = parent
@@ -62,7 +64,14 @@ class View {
             const note = document.createElement("div")
             note.textContent = "Nota: " + f.note
             const history = document.createElement("div")
-            history.textContent = "Historia: " + f.history
+            let texto
+            if (f.history.history.length > 0) {
+                texto = "Historia:"
+                for (const hData of f.history.history) {
+                    texto += "<br>" + hData.date + ": " + hData.note
+                }
+                history.innerHTML = texto
+            }
  //----------------------------------------------------------------------------------- delete btn
             const btnDelete = document.createElement("button")
             const idAtt = document.createAttribute("id")
