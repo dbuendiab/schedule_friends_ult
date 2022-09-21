@@ -2,6 +2,7 @@ class View {
     constructor(parent) {
         this.root = parent
         this.newFriendAddedEvent = new Event()
+        this.editFriendEvent = new Event ()
         this.deleteFriendEvent = new Event()
         this.confirmDateEvent = new Event()
         this.deleteHistoryEntry = new Event()
@@ -45,7 +46,52 @@ class View {
             // newFriendModelCallback({})
         })
     }
+//----------------------------------------------------------------------------------------- FORM SHOW TO EDIT FRIEND!!!
 
+
+    editFriendFormShow(friend) {
+
+        //prevents more than 1 new friend form
+        if (document.getElementsByClassName("new-friend").length > 0) return
+
+        const {name, date, importance, periodicity, note} = friend
+
+
+        const form = document.createElement("div")
+        form.className = "new-friend"
+        // Necesito input boxes para name, date, importance, periodicity, note
+        form.innerHTML = `
+        <label>Nombre: <input type="text" id="name" value="${name}" disabled> </label>
+        <label>Prox. cita: <input type="date" id="date" value="${date}"></label>
+        <label>Importancia: <input type="range" min="0" max="100" id="importance" value="${importance}"></label>
+        <label>Periodicidad: <input type="number" min="1" id="periodicity" value="${periodicity}"></label>
+        <label>Notas: <textarea id="note">${note}</textarea></label>
+        <button id="accept">Aceptar</button>
+        <button id="cancel">Cancelar</button>
+        `
+        this.root.appendChild(form)
+
+        const btnAccept = document.getElementById("accept")
+        btnAccept.addEventListener("click", () => {
+            const data = {
+                name: document.getElementById("name").value,
+                date: document.getElementById("date").value,
+                importance: document.getElementById("importance").value,
+                periodicity: document.getElementById("periodicity").value,
+                note: document.getElementById("note").value
+            }
+            this.root.removeChild(form)
+            this.editFriendEvent.trigger(data)
+        })
+        const btnCancel = document.getElementById("cancel")
+        btnCancel.addEventListener("click", () => {
+            this.root.removeChild(form)
+            // newFriendModelCallback({})
+        })
+    }
+
+
+    //-------------------------------------------------------------------------------------
     redraw(friends) {
         // Eliminar todos los nodos
         while (this.root.firstChild) {
@@ -67,6 +113,18 @@ class View {
             note.textContent = "Nota: " + f.note
             const historyBox = document.createElement("div")
             //history.textContent = "Historia: " + f.history
+
+            //----------------------------------------------------------------------------------- update btn
+
+            const btnEditFriend = document.createElement("button")
+            btnEditFriend.id = "btnEditFriend"
+            btnEditFriend.textContent = "edit friend"
+
+            btnEditFriend.addEventListener('click', () => {
+                    this.editFriendFormShow(f)
+            })
+
+
             //----------------------------------------------------------------------------------- delete btn
             const btnDelete = document.createElement("button")
             const idAtt = document.createAttribute("id")
@@ -84,7 +142,7 @@ class View {
             const btnConfirm = document.createElement("button")
             btnConfirm.id = "btnConfirm"
             btnConfirm.className = "friendButton"
-            btnConfirm.textContent = "confirm date"
+            btnConfirm.textContent = "to history"
 
             btnConfirm.addEventListener("click", () => {
                 if (window.confirm("do you want to confirm?")) {
@@ -160,6 +218,7 @@ class View {
             elem.appendChild(periodicity)
             elem.appendChild(note)
             elem.appendChild(historyBox)
+            elem.appendChild(btnEditFriend)
             elem.appendChild(btnDelete)
             elem.appendChild(btnConfirm)
             elem.appendChild(btnShowHistory)

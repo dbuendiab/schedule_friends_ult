@@ -10,6 +10,11 @@ class Controller {
         this.view.newFriendAddedEvent.addListener( (friendObject) => {
             this.model.newFriend(friendObject)
         })
+
+        this.view.editFriendEvent.addListener((data) => {
+            this.model.editFriend(data)
+        })
+
         this.view.deleteFriendEvent.addListener((name) => {
             this.model.deleteFriend(name)
         })

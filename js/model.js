@@ -21,6 +21,28 @@ class Friends {
     }
 
 //----------------------------------------------------------------------------------
+
+    editFriend(data) {
+
+        const {name, date, importance, periodicity, note} = data
+
+
+        for (let i = 0; i < this.friends.length; i++) {
+            if (name === this.friends[i].name) {
+
+                this.friends[i].date = date
+                this.friends[i].importance = parseInt(importance)
+                this.friends[i].periodicity = parseInt(periodicity)
+                this.friends[i].note = note
+
+                this.saveAll()
+                this.wereChangesEvent.trigger(this.getAll())
+                break
+            }
+        }
+    }
+
+//----------------------------------------------------------------------------------
     deleteFriend(name) {
 
         for (let i = 0; i < this.friends.length; i++) {
