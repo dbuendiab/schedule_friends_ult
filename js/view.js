@@ -4,9 +4,15 @@ class View {
         this.newFriendAddedEvent = new Event()
         this.deleteFriendEvent = new Event()
         this.confirmDateEvent = new Event()
+        this.deleteHistoryEntry = new Event()
     }
 
     newFriendFormShow() {
+
+        //prevents more than 1 new friend form
+        if (document.getElementsByClassName("new-friend").length > 0) return
+
+
         const form = document.createElement("div")
         form.className = "new-friend"
         // Necesito input boxes para name, date, importance, periodicity, note
@@ -101,11 +107,9 @@ class View {
 
                 if (btnShowHistory.className === "showBtn") {
 
-                    if (f.history.history.length === 0){
+                    if (f.history.history.length === 0) {
                         return
                     }
-
-                    let booleanToggler= true
 
                     for (const h of f.history.history) {
 
@@ -113,26 +117,29 @@ class View {
 
                         const elem = document.createElement("div")
                         elem.className = "containerHistory"
-                        if (booleanToggler){
-                            elem.classList.add("evenRow")
-                        }
-
-                        booleanToggler = !booleanToggler
-
 
                         const dateBox = document.createElement("div")
                         dateBox.textContent = "date" + date
                         const noteBox = document.createElement("div")
                         noteBox.textContent = "note" + note
 
+                        const btnDeleteEntry = document.createElement("button")
+                        btnDeleteEntry.id = "btnDeleteEntry"
+                        btnDeleteEntry.textContent = "delete entry"
 
-//TODO add delete btn for elem
+                        btnDeleteEntry.addEventListener('click', () => {
+
+                            elem.parentNode.removeChild(elem)
+
+                            this.deleteHistoryEntry.trigger([f.name, date])
+                        })
 
 
                         historyBox.appendChild(elem)
 
                         elem.appendChild(dateBox)
                         elem.appendChild(noteBox)
+                        elem.appendChild(btnDeleteEntry)
                     }
                     btnShowHistory.textContent = "hide history"
                     btnShowHistory.className = "hideBtn"

@@ -17,6 +17,10 @@ class Controller {
 
             this.model.confirmDate(params)
         })
+        this.view.deleteHistoryEntry.addListener((params)=>{
+
+            this.model.deleteHistoryEntry(params)
+        })
 
 
 
