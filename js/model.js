@@ -110,10 +110,14 @@ class Friends {
         for (const h of hola) {
             const {name, date, importance, periodicity, note, history} = h
             const friend = new Friend(name, date, importance, periodicity, note)
-            for (const hist of history.history) {
-                const {date, note, state} = hist
-                friend.history.add(date, note, state)
+
+            if (Array.isArray((history)) && history.history.length > 0) {
+                for (const hist of history.history) {
+                    const {date, note, state} = hist
+                    friend.history.add(date, note, state)
+                }
             }
+
             friends.push(friend)
         }
         return friends;
